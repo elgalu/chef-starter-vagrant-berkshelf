@@ -1,4 +1,7 @@
 {
+  "ssl": {
+    "verify": false
+  },
   "chef": {
     "chef_server_url": "https://api.opscode.com/organizations/rubywebs",
     "validation_client_name": "rubywebs-validator",
