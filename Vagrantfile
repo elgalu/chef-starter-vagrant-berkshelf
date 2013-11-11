@@ -20,13 +20,16 @@ Vagrant.configure("2") do |config|
 
   # This can be set to the host name you wish the guest machine to have. Vagrant
   # will automatically execute the configuration necessary to make this happen.
-  config.vm.hostname = "elgalu-starter"
+  config.vm.hostname = "elgalu-starter-vagrant"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # port 8080 on the virtual machine is forwarded to port 9090 on the host.
   # This will allow the virtual machine to communicate of the common proxy port 8080.
   config.vm.network :forwarded_port, guest: 8080, host: 9090
+
+  # https://github.com/RiotGames/vagrant-berkshelf
+  config.berkshelf.enabled = true
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -61,24 +64,56 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
   # some recipes and/or roles.
-  #
-  # config.vm.provision :chef_solo do |chef|
-  #   chef.cookbooks_path = "cookbooks"
-  #   chef.roles_path = "roles"
-  #   chef.data_bags_path = "data_bags"
-  #   chef.add_recipe "mysql"
-  #   chef.add_role "web"
-  #
-  #   # You may also specify custom JSON attributes:
-  #   chef.json = { :mysql_password => "foo" }
-  # end
+=begin
+  config.vm.provision :chef_solo do |chef|
+    chef.cookbooks_path = "cookbooks"
+    chef.roles_path = "roles"
+    chef.data_bags_path = "data_bags"
+    chef.add_recipe "mysql"
+    chef.add_recipe "mysql::server"
+    chef.add_recipe "mysql::ruby"
+    # chef.add_role "web"
+
+    # You may also specify custom JSON attributes:
+    mysql_password = 'foo1234'
+    chef.json = {
+      :mysql => {
+        :server_debian_password => mysql_password,
+        :server_root_password => mysql_password,
+        :server_repl_password => mysql_password
+      }
+    }
+  end
+=end
 
   # Enable provisioning with chef server, specifying the chef server URL,
   # and the path to the validation key (relative to this Vagrantfile).
-  #
-  # config.vm.provision :chef_client do |chef|
-  #   chef.chef_server_url = "https://api.opscode.com/organizations/rubywebs"
-  #   chef.validation_client_name = "rubywebs-validator"
-  #   chef.validation_key_path = ".chef/rubywebs-validator.pem"
-  # end
+  config.vm.provision :chef_client do |chef|
+    chef.chef_server_url = "https://api.opscode.com/organizations/rubywebs"
+    chef.validation_client_name = "rubywebs-validator"
+    chef.validation_key_path = ".chef/rubywebs-validator.pem"
+
+    # You have 4 options for the run list:
+    # 1. Edit server side: https://preview.opscode.com/organizations/rubywebs/nodes/elgalu-starter-vagrant
+    # 2. Using run_list
+    chef.run_list = [
+      "recipe[build-essential]",
+      "recipe[openssl]",
+      "recipe[mysql]",
+      "recipe[mysql::server]",
+      "recipe[mysql::ruby]",
+      "recipe[starter]"
+    ]
+
+    # 3. Using add_recipe
+    # chef.add_recipe "mysql::server"
+    # chef.add_recipe "mysql::ruby"
+    # chef.add_recipe "starter"
+
+    # 4. This one is without this Vagrantfile, using knife:
+    # knife bootstrap localhost --ssh-user vagrant --ssh-password vagrant --ssh-port 2201 --run-list "recipe[mysql],recipe[mysql::server],recipe[mysql::ruby],recipe[starter]" --sudo
+
+    # TODO: What is this for?
+    # chef.environment = "vagrant-dev"
+  end
 end

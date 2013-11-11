@@ -26,7 +26,7 @@ site :opscode
 
 # Berkshelf also allows you to define git locations. Uncomment the following line
 # to download the latest master branch from github for this cookbook.
-# cookbook "mysql", :git => "https://github.com/opscode-cookbooks/mysql.git"
+cookbook "mysql", :git => "https://github.com/opscode-cookbooks/mysql.git"
 
 # Especially for local development, it's helpful to use a local path location.
 # Uncomment to point at a local cookbook on the filesystem, relative to the

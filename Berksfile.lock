@@ -1,4 +1,15 @@
 {
   "sources": {
+    "mysql": {
+      "locked_version": "4.0.5",
+      "git": "https://github.com/opscode-cookbooks/mysql.git",
+      "ref": "a5ef5eadd3323553268f1070e9cc3d7dba23c512"
+    },
+    "openssl": {
+      "locked_version": "1.1.0"
+    },
+    "build-essential": {
+      "locked_version": "1.4.2"
+    }
   }
 }
