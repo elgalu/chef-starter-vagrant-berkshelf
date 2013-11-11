@@ -1,3 +1,14 @@
+This chef-starter
+=================
+My personal chef-start full working example. Ready for vagrant or localhost, chef-solo or chef-client or knife.
+
+Sample includes some recipes:
+
+* build-essential
+* openssl
+* mysql
+* customized *starter* recipe
+
 The chef-repo
 ===============
 All installations require a central workspace known as the chef-repo. This is a place where primitive objects--cookbooks, roles, environments, data bags, and chef-repo configuration files--are stored and managed.
